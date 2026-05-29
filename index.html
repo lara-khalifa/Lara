@@ -1,62 +1,76 @@
-"use client";
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8" />
+  <title>منصة الاشتراك</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
+<body class="bg-black text-white">
 
-/* =========================
-   APP MAIN (Login + Profile Flow)
-========================= */
+<!-- LOGIN -->
+<div id="loginPage" class="h-screen flex items-center justify-center">
+  <div class="bg-gray-900 p-8 rounded-2xl w-96">
+    <h1 class="text-xl mb-4">تسجيل الدخول</h1>
+    <input id="user" placeholder="اسم المستخدم" class="w-full p-2 mb-2 text-black"/>
+    <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-2 mb-4 text-black"/>
+    <button onclick="login()" class="bg-blue-600 w-full p-2 rounded">دخول</button>
+  </div>
+</div>
 
-export default function App() {
-  const router = useRouter();
+<!-- DASHBOARD -->
+<div id="app" class="hidden p-6">
 
-  const [name, setName] = useState("");
-  const [user, setUser] = useState<any>(null);
-  const [unlocked, setUnlocked] = useState(false);
-  const [tab, setTab] = useState("paypal");
+  <h1 class="text-2xl mb-4">📦 محتوى المشتركين</h1>
 
-  useEffect(() => {
-    const data = localStorage.getItem("user");
-    if (data) setUser(JSON.parse(data));
-  }, []);
+  <button onclick="showPay()" class="bg-green-600 px-4 py-2 rounded mb-4">
+    الاشتراك الآن
+  </button>
 
-  /* =========================
-     LOGIN
-  ========================= */
-  const login = () => {
-    if (!name.trim()) return;
+  <div id="content" class="grid grid-cols-2 gap-4">
+    <div class="bg-gray-800 p-4 rounded-xl blur-sm">محتوى 1 🔒</div>
+    <div class="bg-gray-800 p-4 rounded-xl blur-sm">محتوى 2 🔒</div>
+  </div>
 
-    const fakeUser = { name };
-    localStorage.setItem("user", JSON.stringify(fakeUser));
+</div>
 
-    setUser(fakeUser);
-    router.push("/profile");
-  };
+<!-- PAYMENT -->
+<div id="pay" class="hidden fixed inset-0 bg-black p-10">
+  <h2 class="text-xl mb-4">💳 طرق الدفع</h2>
 
-  /* =========================
-     LOGOUT
-  ========================= */
-  const logout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    setUnlocked(false);
-    router.push("/");
-  };
+  <p>BaridiMob: 00799999004286372491</p>
+  <p>Binance ID: 1202030004</p>
 
-  /* =========================
-     HOME PAGE
-  ========================= */
-  if (!user) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-6 text-center">
-        <h1 className="text-5xl font-black">
-          LARA <span className="text-blue-500">KHALIFA</span>
-        </h1>
+  <div class="mt-4">
+    <p>ارفع إثبات الدفع:</p>
+    <input type="file" class="mt-2"/>
+  </div>
 
-        <p className="text-zinc-400 mt-4">
-          منصة محتوى VIP احترافية
-        </p>
+  <button onclick="requestAccess()" class="bg-blue-600 px-4 py-2 mt-4 rounded">
+    طلب تفعيل
+  </button>
 
-        <div className="mt-6 bg-zinc-900 p-6 rounded-2xl border border-zinc-800 w-full max-w-sm">
-          <h2 className="text
+  <button onclick="closePay()" class="ml-2">إغلاق</button>
+</div>
+
+<script>
+function login(){
+  document.getElementById("loginPage").style.display="none";
+  document.getElementById("app").style.display="block";
+}
+
+function showPay(){
+  document.getElementById("pay").style.display="block";
+}
+
+function closePay(){
+  document.getElementById("pay").style.display="none";
+}
+
+function requestAccess(){
+  alert("تم إرسال طلبك، سيتم التفعيل قريباً");
+}
+</script>
+
+</body>
+</html>
