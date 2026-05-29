@@ -1,74 +1,112 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-  <meta charset="UTF-8" />
-  <title>منصة الاشتراك</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+<meta charset="UTF-8">
+<title>منصة الاشتراك</title>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="bg-black text-white">
 
 <!-- LOGIN -->
-<div id="loginPage" class="h-screen flex items-center justify-center">
-  <div class="bg-gray-900 p-8 rounded-2xl w-96">
+<div id="login" class="h-screen flex items-center justify-center">
+  <div class="bg-gray-900 p-6 rounded-xl w-96">
     <h1 class="text-xl mb-4">تسجيل الدخول</h1>
-    <input id="user" placeholder="اسم المستخدم" class="w-full p-2 mb-2 text-black"/>
-    <input id="pass" type="password" placeholder="كلمة المرور" class="w-full p-2 mb-4 text-black"/>
-    <button onclick="login()" class="bg-blue-600 w-full p-2 rounded">دخول</button>
+
+    <input id="username" placeholder="اسم المستخدم"
+      class="w-full p-2 mb-2 text-black rounded">
+
+    <input id="password" type="password" placeholder="كلمة المرور"
+      class="w-full p-2 mb-4 text-black rounded">
+
+    <button onclick="login()"
+      class="bg-blue-600 w-full p-2 rounded">دخول</button>
+
+    <p class="text-xs mt-3 text-gray-400">
+      الحساب تجريبي (أي شيء يدخل)
+    </p>
   </div>
 </div>
 
-<!-- DASHBOARD -->
-<div id="app" class="hidden p-6">
+<!-- MAIN -->
+<div id="main" class="hidden p-6">
 
-  <h1 class="text-2xl mb-4">📦 محتوى المشتركين</h1>
+  <h1 class="text-2xl mb-4">📦 المحتوى الحصري</h1>
 
-  <button onclick="showPay()" class="bg-green-600 px-4 py-2 rounded mb-4">
+  <button onclick="openPay()"
+    class="bg-green-600 px-4 py-2 rounded mb-4">
     الاشتراك الآن
   </button>
 
   <div id="content" class="grid grid-cols-2 gap-4">
-    <div class="bg-gray-800 p-4 rounded-xl blur-sm">محتوى 1 🔒</div>
-    <div class="bg-gray-800 p-4 rounded-xl blur-sm">محتوى 2 🔒</div>
-  </div>
 
+    <div class="bg-gray-800 p-4 rounded-xl blur-sm">
+      🔒 فيديو 1 (مقفل)
+    </div>
+
+    <div class="bg-gray-800 p-4 rounded-xl blur-sm">
+      🔒 صورة 2 (مقفل)
+    </div>
+
+  </div>
 </div>
 
 <!-- PAYMENT -->
-<div id="pay" class="hidden fixed inset-0 bg-black p-10">
-  <h2 class="text-xl mb-4">💳 طرق الدفع</h2>
+<div id="payment"
+  class="hidden fixed inset-0 bg-black p-6">
 
-  <p>BaridiMob: 00799999004286372491</p>
-  <p>Binance ID: 1202030004</p>
+  <h2 class="text-xl mb-4">💳 الاشتراك</h2>
 
-  <div class="mt-4">
-    <p>ارفع إثبات الدفع:</p>
-    <input type="file" class="mt-2"/>
+  <div class="bg-gray-900 p-4 rounded">
+    <p>BaridiMob: 00799999004286372491</p>
+    <p>Binance ID: 1202030004</p>
+    <p>PayPal QR: (ضعه لاحقًا)</p>
   </div>
 
-  <button onclick="requestAccess()" class="bg-blue-600 px-4 py-2 mt-4 rounded">
+  <div class="mt-4">
+    <p>📤 رفع إثبات الدفع:</p>
+    <input type="file" class="mt-2">
+  </div>
+
+  <button onclick="activate()"
+    class="bg-blue-600 px-4 py-2 mt-4 rounded">
     طلب تفعيل
   </button>
 
-  <button onclick="closePay()" class="ml-2">إغلاق</button>
+  <button onclick="closePay()" class="ml-2 mt-4">
+    إغلاق
+  </button>
 </div>
 
 <script>
+let subscribed = false;
+
 function login(){
-  document.getElementById("loginPage").style.display="none";
-  document.getElementById("app").style.display="block";
+  document.getElementById("login").style.display="none";
+  document.getElementById("main").style.display="block";
 }
 
-function showPay(){
-  document.getElementById("pay").style.display="block";
+function openPay(){
+  document.getElementById("payment").style.display="block";
 }
 
 function closePay(){
-  document.getElementById("pay").style.display="none";
+  document.getElementById("payment").style.display="none";
 }
 
-function requestAccess(){
-  alert("تم إرسال طلبك، سيتم التفعيل قريباً");
+function activate(){
+  alert("تم إرسال طلبك، سيتم التفعيل يدويًا");
+  subscribed = true;
+
+  // فتح المحتوى (محاكاة اشتراك)
+  document.getElementById("content").innerHTML = `
+    <div class="bg-gray-800 p-4 rounded-xl">
+      🎥 فيديو 1 مفتوح
+    </div>
+    <div class="bg-gray-800 p-4 rounded-xl">
+      🖼 صورة 2 مفتوحة
+    </div>
+  `;
 }
 </script>
 
