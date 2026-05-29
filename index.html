@@ -1,0 +1,282 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+/* ---------------- تطبيق صفحة واحدة (الرئيسية + الدخول + الملف الشخصي) ---------------- */
+
+export default function App() {
+  const router = useRouter();
+  const [page, setPage] = useState("home");
+  const [name, setName] = useState("");
+  const [user, setUser] = useState<any>(null);
+  const [unlocked, setUnlocked] = useState(false);
+  const [activeTab, setActiveTab] = useState("paypal"); // للتبديل بين طرق الدفع المختلفة
+
+  // التحقق من وجود جلسة مستخدم مسجلة عند تحميل الصفحة
+  useEffect(() => {
+    const data = localStorage.getItem("user");
+    if (data) {
+      setUser(JSON.parse(data));
+      setPage("profile");
+    }
+  }, []);
+
+  /* عمليات التحكم */
+  const login = () => {
+    if (!name.trim()) return; 
+
+    const fakeUser = { name };
+    localStorage.setItem("user", JSON.stringify(fakeUser));
+
+    setUser(fakeUser);
+    setPage("profile");
+  };
+
+  const logout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    setUnlocked(false);
+    setPage("home");
+  };
+
+  /* ---------------- 1. الصفحة الرئيسية ---------------- */
+  if (page === "home") {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center text-white bg-black p-4" dir="rtl">
+        <h1 className="text-5xl font-black mb-6 tracking-wider">
+          LARA <span className="text-blue-500">KHALIFA</span>
+        </h1>
+
+        <p className="text-zinc-400 mb-10 text-center max-w-md text-lg">
+          منصة محتوى حصرية — تسجيل الدخول للوصول إلى الصور والفيديوهات
+        </p>
+
+        <button
+          onClick={() => setPage("login")}
+          className="bg-blue-500 hover:bg-blue-600 transition-colors px-8 py-4 rounded-xl font-bold text-lg shadow-lg shadow-blue-500/20"
+        >
+          دخول المنصة
+        </button>
+      </div>
+    );
+  }
+
+  /* ---------------- 2. صفحة تسجيل الدخول ---------------- */
+  if (page === "login") {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-white bg-black p-4" dir="rtl">
+        <div className="bg-zinc-900 p-8 rounded-2xl w-full max-w-[380px] border border-zinc-800">
+          <h1 className="text-3xl font-bold mb-6 text-center">تسجيل الدخول</h1>
+
+          <input
+            className="w-full p-3 mb-4 rounded bg-black border border-zinc-700 text-white focus:outline-none focus:border-blue-500 transition-colors text-right"
+            placeholder="اسم المستخدم"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+
+          <button
+            onClick={login}
+            className="w-full bg-blue-500 hover:bg-blue-600 transition-colors p-3 rounded font-bold text-lg mb-3"
+          >
+            دخول
+          </button>
+          
+          <button 
+            onClick={() => setPage("home")} 
+            className="w-full text-center text-sm text-zinc-500 hover:text-zinc-300 transition-colors"
+          >
+            إلغاء
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  /* ---------------- 3. صفحة الملف الشخصي (بروفايل) ---------------- */
+  if (page === "profile" && user) {
+    return (
+      <div className="min-h-screen bg-[#0b111e] text-white p-6 md:p-12" dir="rtl">
+        <div className="max-w-4xl mx-auto">
+          
+          {/* الهيدر / رأس الصفحة */}
+          <div className="flex flex-col sm:flex-row items-center gap-6 mb-10 border-b border-zinc-800/60 pb-8">
+            
+            {/* الصورة الشخصية الدائرية التي أرسلتها */}
+            <div className="relative w-28 h-28 rounded-full bg-gradient-to-tr from-blue-500 via-purple-500 to-pink-500 p-[3px] shadow-xl">
+              <div className="relative w-full h-full bg-zinc-900 rounded-full overflow-hidden">
+                <Image
+                  src="/IMG_20260529_110017_389.jpg"
+                  alt="Lara Khalifa"
+                  fill
+                  className="object-cover"
+                  priority
+                />
+              </div>
+            </div>
+
+            <div className="text-center sm:text-right flex-1">
+              <h1 className="text-3xl font-black tracking-wide text-white">LARA KHALIFA</h1>
+              <p className="text-zinc-400 mt-1 text-sm">@{user.name}</p>
+
+              <div className="flex flex-wrap justify-center sm:justify-start gap-4 mt-4 text-sm text-zinc-300">
+                <span className="flex items-center gap-1">👥 120K متابع</span>
+                <span className="flex items-center gap-1">⭐ 8K مشترك</span>
+                <span className="flex items-center gap-1 text-amber-400">🔥 VIP Content</span>
+              </div>
+            </div>
+
+            <button 
+              onClick={logout}
+              className="text-sm bg-zinc-800/80 hover:bg-zinc-700 text-zinc-300 px-5 py-2.5 rounded-xl transition-colors mt-4 sm:mt-0 font-medium border border-zinc-700/50"
+            >
+              تسجيل خروج
+            </button>
+          </div>
+
+          {/* نظام قفل المحتوى وعرض خيارات الدفع المختلفة */}
+          {!unlocked ? (
+            <div className="bg-[#121824] border border-zinc-800/80 p-8 rounded-2xl text-center max-w-xl mx-auto my-6 shadow-2xl relative overflow-hidden">
+              <div className="text-4xl mb-4 text-blue-500">🔒</div>
+              <h2 className="text-2xl font-bold mb-3 text-white">فتح المحتوى الحصري</h2>
+              <p className="text-zinc-400 text-sm max-w-md mx-auto mb-8 leading-relaxed">
+                هذا الحساب يحتوي على صور ومقاطع فيديو حصرية لـ VIP. اختر طريقة الدفع المناسبة لك لفتح الوصول الفوري.
+              </p>
+              
+              {/* أزرار اختيار طريقة الدفع (Tabs) */}
+              <div className="flex border-b border-zinc-800 mb-6 bg-[#0b111e]/50 p-1 rounded-xl">
+                <button
+                  onClick={() => setActiveTab("paypal")}
+                  className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-colors ${activeTab === "paypal" ? "bg-blue-500 text-white" : "text-zinc-400 hover:text-white"}`}
+                >
+                  PayPal
+                </button>
+                <button
+                  onClick={() => setActiveTab("baridimob")}
+                  className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-colors ${activeTab === "baridimob" ? "bg-amber-600 text-white" : "text-zinc-400 hover:text-white"}`}
+                >
+                  بريدي موب
+                </button>
+                <button
+                  onClick={() => setActiveTab("binance")}
+                  className={`flex-1 py-2.5 text-sm font-bold rounded-lg transition-colors ${activeTab === "binance" ? "bg-yellow-500 text-black" : "text-zinc-400 hover:text-white"}`}
+                >
+                  Binance
+                </button>
+              </div>
+
+              {/* صناديق معلومات الدفع بناءً على اختيار التبويب */}
+              <div className="bg-[#0b111e]/90 border border-zinc-800 p-6 rounded-2xl min-h-[260px] flex flex-col items-center justify-center shadow-inner">
+                
+                {/* 1. واجهة بايبال مع كود الـ QR المرسل */}
+                {activeTab === "paypal" && (
+                  <div className="w-full animate-fadeIn">
+                    <div className="flex items-center justify-center gap-1 mb-4">
+                      <span className="text-sm font-bold tracking-wider text-[#003087]">Pay</span>
+                      <span className="text-sm font-bold tracking-wider text-[#0079C1]">Pal</span>
+                    </div>
+                    <div className="relative w-44 h-44 mx-auto bg-white p-2 rounded-xl mb-2">
+                      <Image
+                        src="/IMG_20260529_112457_783.jpg"
+                        alt="PayPal QR Code"
+                        fill
+                        className="object-contain p-1"
+                      />
+                    </div>
+                    <p className="text-xs text-zinc-400 mt-2">قم بمسح الكود عبر تطبيق بايبال لإرسال الدفع مباشرة.</p>
+                  </div>
+                )}
+
+                {/* 2. واجهة بريدي موب المضاف إليها رقمك الجاري بدقة */}
+                {activeTab === "baridimob" && (
+                  <div className="w-full animate-fadeIn p-2">
+                    <div className="text-2xl mb-2">💳</div>
+                    <h3 className="text-md font-bold text-amber-500 mb-4">الدفع عبر BaridiMob</h3>
+                    <p className="text-xs text-zinc-400 mb-2 font-medium">رقم الحساب الجاري (RIP):</p>
+                    <div className="bg-black/60 border border-zinc-800 p-3 rounded-xl font-mono text-sm tracking-wider text-white select-all text-center">
+                      00799999004286372491
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-4 leading-relaxed">
+                      يرجى تحويل مبلغ الاشتراك إلى الحساب (RIP) أعلاه وإرسال لقطة شاشة لإثبات المعاملة لتفعيل حسابك.
+                    </p>
+                  </div>
+                )}
+
+                {/* 3. واجهة بينانس المضاف إليها معرّف الحساب بدقة */}
+                {activeTab === "binance" && (
+                  <div className="w-full animate-fadeIn p-2">
+                    <div className="text-2xl mb-2">🔶</div>
+                    <h3 className="text-md font-bold text-yellow-500 mb-4">الدفع عبر Binance Pay</h3>
+                    <p className="text-xs text-zinc-400 mb-2 font-medium">معرّف المستخدم (Binance ID):</p>
+                    <div className="bg-black/60 border border-zinc-800 p-3 rounded-xl font-mono text-lg font-bold tracking-widest text-white select-all text-center">
+                      1202030004
+                    </div>
+                    <p className="text-xs text-zinc-500 mt-4 leading-relaxed">
+                      انسخ الـ Binance ID الموضح أعلاه وقم بإرسال قيمة الاشتراك من خلال قسم Binance Pay المباشر.
+                    </p>
+                  </div>
+                )}
+
+              </div>
+
+              <p className="text-xs text-zinc-500 mt-6">
+                بعد الدفع، سيتم مراجعة الطلب وتحديث الصفحة تلقائياً لفتح الألبوم الحصري.
+              </p>
+
+              {/* زر محاكاة لتجربة العرض الفوري للألبوم */}
+              <button
+                onClick={() => setUnlocked(true)}
+                className="mt-6 block mx-auto text-xs text-zinc-600 hover:text-zinc-400 underline transition-colors"
+              >
+                (تخطي الدفع للتجربة الفورية 🔓)
+              </button>
+            </div>
+          ) : (
+            <div className="animate-fadeIn">
+              <h2 className="text-xl font-bold mb-6 text-blue-500 flex items-center gap-2">
+                <span>✨</span> المحتوى الحصري المفتوح لك الآن:
+              </h2>
+              
+              {/* شبكة عرض الصور الشخصية بعد فتح القفل */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                
+                <div className="bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden shadow-lg group">
+                  <div className="relative h-96 w-full">
+                    <Image
+                      src="/IMG_20260529_112502_999.jpg"
+                      alt="VIP Content 1"
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-4 bg-[#121824] border-t border-zinc-800">
+                    <p className="text-sm font-bold text-zinc-300">📸 صورة حصرية VIP رقم 1</p>
+                  </div>
+                </div>
+
+                <div className="bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden shadow-lg group">
+                  <div className="relative h-96 w-full">
+                    <Image
+                      src="/IMG_20260529_110017_389.jpg"
+                      alt="VIP Content 2"
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  <div className="p-4 bg-[#121824] border-t border-zinc-800">
+                    <p className="text-sm font-bold text-zinc-300">📸 صورة حصرية VIP رقم 2</p>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
