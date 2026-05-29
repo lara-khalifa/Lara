@@ -1,94 +1,62 @@
-/* =========================
-   app/layout.tsx
-========================= */
-
-import "./globals.css";
-import Link from "next/link";
-
-function Navbar() {
-  return (
-    <div className="w-full bg-black border-b border-zinc-800 text-white px-6 py-4 flex justify-between items-center">
-      <h1 className="font-black tracking-widest">
-        LARA <span className="text-blue-500">KHALIFA</span>
-      </h1>
-
-      <div className="flex gap-6 text-sm text-zinc-300">
-        <Link href="/">الرئيسية</Link>
-        <Link href="/login">تسجيل الدخول</Link>
-        <Link href="/profile">الملف الشخصي</Link>
-      </div>
-    </div>
-  );
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <html lang="ar" dir="rtl">
-      <body className="bg-black text-white">
-        <Navbar />
-        {children}
-      </body>
-    </html>
-  );
-}
-
-/* =========================
-   app/page.tsx (HOME)
-========================= */
-
 "use client";
 
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-export function HomePage() {
+/* =========================
+   APP MAIN (Login + Profile Flow)
+========================= */
+
+export default function App() {
   const router = useRouter();
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] text-center">
-      <h1 className="text-5xl font-black">
-        LARA <span className="text-blue-500">KHALIFA</span>
-      </h1>
-
-      <p className="text-zinc-400 mt-4 max-w-md">
-        منصة محتوى حصرية — نظام احترافي بالتنقل بين الصفحات
-      </p>
-
-      <button
-        onClick={() => router.push("/login")}
-        className="mt-8 bg-blue-500 px-6 py-3 rounded-xl font-bold hover:bg-blue-600"
-      >
-        دخول المنصة
-      </button>
-    </div>
-  );
-}
-
-export default HomePage;
-
-/* =========================
-   app/login/page.tsx
-========================= */
-
-"use client";
-
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
-export function LoginPage() {
   const [name, setName] = useState("");
-  const router = useRouter();
+  const [user, setUser] = useState<any>(null);
+  const [unlocked, setUnlocked] = useState(false);
+  const [tab, setTab] = useState("paypal");
 
+  useEffect(() => {
+    const data = localStorage.getItem("user");
+    if (data) setUser(JSON.parse(data));
+  }, []);
+
+  /* =========================
+     LOGIN
+  ========================= */
   const login = () => {
     if (!name.trim()) return;
 
-    localStorage.setItem("user", JSON.stringify({ name }));
+    const fakeUser = { name };
+    localStorage.setItem("user", JSON.stringify(fakeUser));
+
+    setUser(fakeUser);
     router.push("/profile");
   };
 
-  return (
-    <div className="flex items-center justify-center min-h-[80vh]">
-      <div className="bg-zinc-900 p-6 rounded-2xl w-full max-w-sm border border
+  /* =========================
+     LOGOUT
+  ========================= */
+  const logout = () => {
+    localStorage.removeItem("user");
+    setUser(null);
+    setUnlocked(false);
+    router.push("/");
+  };
+
+  /* =========================
+     HOME PAGE
+  ========================= */
+  if (!user) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-6 text-center">
+        <h1 className="text-5xl font-black">
+          LARA <span className="text-blue-500">KHALIFA</span>
+        </h1>
+
+        <p className="text-zinc-400 mt-4">
+          منصة محتوى VIP احترافية
+        </p>
+
+        <div className="mt-6 bg-zinc-900 p-6 rounded-2xl border border-zinc-800 w-full max-w-sm">
+          <h2 className="text
