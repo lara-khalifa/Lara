@@ -2,111 +2,134 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>منصة الاشتراك</title>
+<title>Premium Content Platform</title>
 <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-black text-white">
+<body class="bg-gradient-to-br from-black to-gray-900 text-white">
 
-<!-- LOGIN -->
-<div id="login" class="h-screen flex items-center justify-center">
+<!-- HEADER -->
+<div class="p-4 flex justify-between items-center border-b border-gray-800">
+  <h1 class="text-xl font-bold">🔥 Premium Hub</h1>
+  <button onclick="openLogin()" class="bg-blue-600 px-4 py-2 rounded-lg">
+    إنشاء حساب
+  </button>
+</div>
+
+<!-- HERO -->
+<div class="text-center mt-10">
+  <h2 class="text-3xl font-bold">محتوى حصري للمشتركين فقط</h2>
+  <p class="text-gray-400 mt-2">اشترك للوصول إلى كل المحتوى المميز</p>
+
+  <button onclick="openSubscribe()"
+    class="mt-6 bg-green-500 px-6 py-3 rounded-xl text-lg shadow-lg">
+    🔓 اشترك الآن
+  </button>
+</div>
+
+<!-- CONTENT GRID -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 mt-10">
+
+  <div class="bg-gray-800 p-4 rounded-xl shadow-lg">
+    <h3 class="font-bold">🎥 فيديو تعليمي</h3>
+    <p class="text-gray-400 text-sm">محتوى مقفل للمشتركين</p>
+    <div class="mt-3 bg-black p-6 rounded blur-sm text-center">
+      🔒 Locked
+    </div>
+  </div>
+
+  <div class="bg-gray-800 p-4 rounded-xl shadow-lg">
+    <h3 class="font-bold">📸 صور حصرية</h3>
+    <p class="text-gray-400 text-sm">معرض خاص</p>
+    <div class="mt-3 bg-black p-6 rounded blur-sm text-center">
+      🔒 Locked
+    </div>
+  </div>
+
+  <div class="bg-gray-800 p-4 rounded-xl shadow-lg">
+    <h3 class="font-bold">📚 محتوى مميز</h3>
+    <p class="text-gray-400 text-sm">دروس و ملفات خاصة</p>
+    <div class="mt-3 bg-black p-6 rounded blur-sm text-center">
+      🔒 Locked
+    </div>
+  </div>
+
+</div>
+
+<!-- LOGIN MODAL -->
+<div id="login" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center">
   <div class="bg-gray-900 p-6 rounded-xl w-96">
-    <h1 class="text-xl mb-4">تسجيل الدخول</h1>
 
-    <input id="username" placeholder="اسم المستخدم"
+    <h2 class="text-xl mb-4">إنشاء حساب</h2>
+
+    <input placeholder="اسم المستخدم"
       class="w-full p-2 mb-2 text-black rounded">
 
-    <input id="password" type="password" placeholder="كلمة المرور"
+    <input type="password" placeholder="كلمة المرور"
       class="w-full p-2 mb-4 text-black rounded">
 
-    <button onclick="login()"
-      class="bg-blue-600 w-full p-2 rounded">دخول</button>
+    <button onclick="fakeLogin()"
+      class="bg-blue-600 w-full p-2 rounded">
+      إنشاء حساب
+    </button>
 
-    <p class="text-xs mt-3 text-gray-400">
-      الحساب تجريبي (أي شيء يدخل)
-    </p>
+    <button onclick="closeLogin()" class="mt-3 text-sm text-gray-400">
+      إغلاق
+    </button>
   </div>
 </div>
 
-<!-- MAIN -->
-<div id="main" class="hidden p-6">
+<!-- SUBSCRIBE MODAL -->
+<div id="subscribe" class="hidden fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center">
+  <div class="bg-gray-900 p-6 rounded-xl w-96">
 
-  <h1 class="text-2xl mb-4">📦 المحتوى الحصري</h1>
+    <h2 class="text-xl mb-4">💳 الاشتراك</h2>
 
-  <button onclick="openPay()"
-    class="bg-green-600 px-4 py-2 rounded mb-4">
-    الاشتراك الآن
-  </button>
-
-  <div id="content" class="grid grid-cols-2 gap-4">
-
-    <div class="bg-gray-800 p-4 rounded-xl blur-sm">
-      🔒 فيديو 1 (مقفل)
+    <div class="bg-black p-3 rounded mb-3 text-sm">
+      <p>BaridiMob: 00799999004286372491</p>
+      <p>Binance ID: 1202030004</p>
     </div>
 
-    <div class="bg-gray-800 p-4 rounded-xl blur-sm">
-      🔒 صورة 2 (مقفل)
-    </div>
+    <p class="text-sm mb-2">رفع إثبات الدفع:</p>
+    <input type="file" class="mb-4">
+
+    <button onclick="unlockContent()"
+      class="bg-green-600 w-full p-2 rounded">
+      طلب تفعيل
+    </button>
+
+    <button onclick="closeSubscribe()" class="mt-3 text-sm text-gray-400">
+      إغلاق
+    </button>
 
   </div>
-</div>
-
-<!-- PAYMENT -->
-<div id="payment"
-  class="hidden fixed inset-0 bg-black p-6">
-
-  <h2 class="text-xl mb-4">💳 الاشتراك</h2>
-
-  <div class="bg-gray-900 p-4 rounded">
-    <p>BaridiMob: 00799999004286372491</p>
-    <p>Binance ID: 1202030004</p>
-    <p>PayPal QR: (ضعه لاحقًا)</p>
-  </div>
-
-  <div class="mt-4">
-    <p>📤 رفع إثبات الدفع:</p>
-    <input type="file" class="mt-2">
-  </div>
-
-  <button onclick="activate()"
-    class="bg-blue-600 px-4 py-2 mt-4 rounded">
-    طلب تفعيل
-  </button>
-
-  <button onclick="closePay()" class="ml-2 mt-4">
-    إغلاق
-  </button>
 </div>
 
 <script>
-let subscribed = false;
-
-function login(){
+function openLogin(){
+  document.getElementById("login").style.display="flex";
+}
+function closeLogin(){
   document.getElementById("login").style.display="none";
-  document.getElementById("main").style.display="block";
+}
+function fakeLogin(){
+  alert("تم إنشاء الحساب (وهمي)");
+  closeLogin();
 }
 
-function openPay(){
-  document.getElementById("payment").style.display="block";
+function openSubscribe(){
+  document.getElementById("subscribe").style.display="flex";
+}
+function closeSubscribe(){
+  document.getElementById("subscribe").style.display="none";
 }
 
-function closePay(){
-  document.getElementById("payment").style.display="none";
-}
+function unlockContent(){
+  alert("تم إرسال طلبك وسيتم التفعيل قريبًا");
 
-function activate(){
-  alert("تم إرسال طلبك، سيتم التفعيل يدويًا");
-  subscribed = true;
-
-  // فتح المحتوى (محاكاة اشتراك)
-  document.getElementById("content").innerHTML = `
-    <div class="bg-gray-800 p-4 rounded-xl">
-      🎥 فيديو 1 مفتوح
-    </div>
-    <div class="bg-gray-800 p-4 rounded-xl">
-      🖼 صورة 2 مفتوحة
-    </div>
-  `;
+  document.querySelectorAll(".blur").forEach(el=>{
+    el.classList.remove("blur-sm");
+  });
 }
 </script>
 
