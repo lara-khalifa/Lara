@@ -1,217 +1,94 @@
+/* =========================
+   app/layout.tsx
+========================= */
+
+import "./globals.css";
+import Link from "next/link";
+
+function Navbar() {
+  return (
+    <div className="w-full bg-black border-b border-zinc-800 text-white px-6 py-4 flex justify-between items-center">
+      <h1 className="font-black tracking-widest">
+        LARA <span className="text-blue-500">KHALIFA</span>
+      </h1>
+
+      <div className="flex gap-6 text-sm text-zinc-300">
+        <Link href="/">الرئيسية</Link>
+        <Link href="/login">تسجيل الدخول</Link>
+        <Link href="/profile">الملف الشخصي</Link>
+      </div>
+    </div>
+  );
+}
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="ar" dir="rtl">
+      <body className="bg-black text-white">
+        <Navbar />
+        {children}
+      </body>
+    </html>
+  );
+}
+
+/* =========================
+   app/page.tsx (HOME)
+========================= */
+
 "use client";
 
-import { useEffect, useState } from "react";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-type User = {
-  name: string;
-};
+export function HomePage() {
+  const router = useRouter();
 
-type Page = "home" | "login" | "profile";
-type Tab = "paypal" | "baridimob" | "binance";
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[80vh] text-center">
+      <h1 className="text-5xl font-black">
+        LARA <span className="text-blue-500">KHALIFA</span>
+      </h1>
 
-export default function App() {
-  const [page, setPage] = useState<Page>("home");
+      <p className="text-zinc-400 mt-4 max-w-md">
+        منصة محتوى حصرية — نظام احترافي بالتنقل بين الصفحات
+      </p>
+
+      <button
+        onClick={() => router.push("/login")}
+        className="mt-8 bg-blue-500 px-6 py-3 rounded-xl font-bold hover:bg-blue-600"
+      >
+        دخول المنصة
+      </button>
+    </div>
+  );
+}
+
+export default HomePage;
+
+/* =========================
+   app/login/page.tsx
+========================= */
+
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+
+export function LoginPage() {
   const [name, setName] = useState("");
-  const [user, setUser] = useState<User | null>(null);
-  const [unlocked, setUnlocked] = useState(false);
-  const [activeTab, setActiveTab] = useState<Tab>("paypal");
-
-  useEffect(() => {
-    const saved = localStorage.getItem("user");
-    if (saved) {
-      setUser(JSON.parse(saved));
-      setPage("profile");
-    }
-  }, []);
+  const router = useRouter();
 
   const login = () => {
     if (!name.trim()) return;
 
-    const fakeUser = { name };
-    localStorage.setItem("user", JSON.stringify(fakeUser));
-
-    setUser(fakeUser);
-    setPage("profile");
+    localStorage.setItem("user", JSON.stringify({ name }));
+    router.push("/profile");
   };
 
-  const logout = () => {
-    localStorage.removeItem("user");
-    setUser(null);
-    setUnlocked(false);
-    setPage("home");
-  };
-
-  /* ---------------- HOME ---------------- */
-  if (page === "home") {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white p-6 text-center">
-        <h1 className="text-5xl font-black tracking-widest">
-          LARA <span className="text-blue-500">KHALIFA</span>
-        </h1>
-
-        <p className="text-zinc-400 mt-4 max-w-md">
-          منصة محتوى حصرية — سجل الدخول للوصول إلى المحتوى
-        </p>
-
-        <button
-          onClick={() => setPage("login")}
-          className="mt-8 bg-blue-500 hover:bg-blue-600 px-8 py-3 rounded-xl font-bold transition"
-        >
-          دخول
-        </button>
-      </div>
-    );
-  }
-
-  /* ---------------- LOGIN ---------------- */
-  if (page === "login") {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-white p-6">
-        <div className="w-full max-w-sm bg-zinc-900 border border-zinc-800 p-6 rounded-2xl">
-          <h2 className="text-2xl font-bold text-center mb-6">تسجيل الدخول</h2>
-
-          <input
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="اسم المستخدم"
-            className="w-full p-3 rounded bg-black border border-zinc-700 focus:border-blue-500 outline-none"
-          />
-
-          <button
-            onClick={login}
-            className="w-full mt-4 bg-blue-500 hover:bg-blue-600 py-3 rounded font-bold"
-          >
-            دخول
-          </button>
-
-          <button
-            onClick={() => setPage("home")}
-            className="w-full mt-3 text-sm text-zinc-400 hover:text-white"
-          >
-            رجوع
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  /* ---------------- PROFILE ---------------- */
-  if (page === "profile" && user) {
-    return (
-      <div className="min-h-screen bg-[#0b111e] text-white p-6">
-        <div className="max-w-5xl mx-auto">
-
-          {/* HEADER */}
-          <div className="flex flex-col md:flex-row items-center gap-6 border-b border-zinc-800 pb-8">
-            <div className="w-24 h-24 relative rounded-full overflow-hidden border-2 border-blue-500">
-              <Image
-                src="/IMG_20260529_110017_389.jpg"
-                alt="profile"
-                fill
-                className="object-cover"
-              />
-            </div>
-
-            <div className="flex-1 text-center md:text-right">
-              <h1 className="text-3xl font-black">LARA KHALIFA</h1>
-              <p className="text-zinc-400">@{user.name}</p>
-
-              <div className="flex gap-4 justify-center md:justify-start mt-3 text-sm text-zinc-300">
-                <span>👥 120K</span>
-                <span>⭐ 8K</span>
-                <span className="text-yellow-400">VIP</span>
-              </div>
-            </div>
-
-            <button
-              onClick={logout}
-              className="bg-zinc-800 hover:bg-zinc-700 px-4 py-2 rounded-lg"
-            >
-              تسجيل خروج
-            </button>
-          </div>
-
-          {/* LOCKED CONTENT */}
-          {!unlocked ? (
-            <div className="mt-10 bg-[#121824] p-6 rounded-2xl border border-zinc-800 max-w-2xl mx-auto">
-              <h2 className="text-xl font-bold text-center">🔒 المحتوى مقفل</h2>
-              <p className="text-zinc-400 text-center mt-2 text-sm">
-                اختر طريقة الدفع لفتح المحتوى
-              </p>
-
-              {/* Tabs */}
-              <div className="flex mt-6 bg-black rounded-xl p-1">
-                {(["paypal", "baridimob", "binance"] as Tab[]).map((t) => (
-                  <button
-                    key={t}
-                    onClick={() => setActiveTab(t)}
-                    className={`flex-1 py-2 rounded-lg text-sm font-bold transition ${
-                      activeTab === t
-                        ? "bg-blue-500 text-white"
-                        : "text-zinc-400"
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-
-              {/* Content */}
-              <div className="mt-6 text-center">
-                {activeTab === "paypal" && (
-                  <Image
-                    src="/IMG_20260529_112457_783.jpg"
-                    alt="paypal"
-                    width={180}
-                    height={180}
-                    className="mx-auto"
-                  />
-                )}
-
-                {activeTab === "baridimob" && (
-                  <p className="mt-4 font-mono text-sm">
-                    00799999004286372491
-                  </p>
-                )}
-
-                {activeTab === "binance" && (
-                  <p className="mt-4 font-mono text-sm">
-                    1202030004
-                  </p>
-                )}
-              </div>
-
-              <button
-                onClick={() => setUnlocked(true)}
-                className="mt-6 text-xs text-zinc-500 hover:text-white underline w-full"
-              >
-                فتح تجريبي
-              </button>
-            </div>
-          ) : (
-            <div className="mt-10 grid md:grid-cols-2 gap-6">
-              {[1, 2].map((i) => (
-                <div key={i} className="bg-zinc-900 rounded-xl overflow-hidden">
-                  <div className="relative h-96">
-                    <Image
-                      src={`/IMG_20260529_110017_389.jpg`}
-                      alt="content"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <p className="p-4 text-sm text-zinc-300">
-                    محتوى VIP رقم {i}
-                  </p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    );
-  }
-
-  return null;
-}
+  return (
+    <div className="flex items-center justify-center min-h-[80vh]">
+      <div className="bg-zinc-900 p-6 rounded-2xl w-full max-w-sm border border
