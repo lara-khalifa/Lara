@@ -1,178 +1,84 @@
-import React, { useEffect, useState } from "react";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>LARA KHALIFA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-export default function App() {
-  const [page, setPage] = useState("welcome");
-  const [plan, setPlan] = useState("");
-  const [method, setMethod] = useState("");
-  const [index, setIndex] = useState(0);
-
-  const images = [
-    "https://i.postimg.cc/gktS9jxh/images-8.jpg",
-    "https://i.postimg.cc/zX2tmvLZ/images-6.jpg",
-    "https://i.postimg.cc/kgXmsBk1/images-10.jpg",
-    "https://i.postimg.cc/kGn1CtN8/images-9.jpg",
-  ];
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setIndex((p) => (p + 1) % images.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, []);
-
-  function payPage() {
-    return (
-      <div style={styles.container}>
-        <h2>صفحة الدفع</h2>
-
-        <p>الخطة المختارة: {plan}</p>
-
-        <select style={styles.input} onChange={(e) => setMethod(e.target.value)}>
-          <option value="">اختر طريقة الدفع</option>
-          <option value="baridi">BaridiMob</option>
-          <option value="binance">Binance</option>
-          <option value="paypal">PayPal</option>
-        </select>
-
-        <button
-          style={styles.btn}
-          onClick={() => {
-            if (!method) return alert("اختر طريقة الدفع");
-            alert("تم اختيار " + method + " (نظام تجريبي)");
-          }}
-        >
-          تأكيد الدفع
-        </button>
-
-        <button style={styles.btn} onClick={() => setPage("home")}>
-          رجوع
-        </button>
-      </div>
-    );
-  }
-
-  function welcomePage() {
-    return (
-      <div style={styles.welcome}>
-        <h1>LARA KHALIFA</h1>
-        <button style={styles.btn} onClick={() => setPage("home")}>
-          الدخول
-        </button>
-      </div>
-    );
-  }
-
-  function homePage() {
-    return (
-      <div style={styles.container}>
-        <h1>العروض</h1>
-
-        {/* سلايدر */}
-        <div style={styles.slider}>
-          <img src={images[index]} style={styles.image} alt="slider" />
-        </div>
-
-        {/* اشتراكات */}
-        <div style={styles.card}>
-          <h3>6 أشهر - 150€</h3>
-          <button
-            style={styles.btn}
-            onClick={() => {
-              setPlan("6 أشهر - 150€");
-              setPage("payment");
-            }}
-          >
-            اشترك
-          </button>
-        </div>
-
-        <div style={styles.card}>
-          <h3>VIP - 250€</h3>
-          <button
-            style={styles.btn}
-            onClick={() => {
-              setPlan("VIP - 250€");
-              setPage("payment");
-            }}
-          >
-            اشترك
-          </button>
-        </div>
-
-        <div style={styles.card}>
-          <h3>سنوي - 300€</h3>
-          <button
-            style={styles.btn}
-            onClick={() => {
-              setPlan("سنوي - 300€");
-              setPage("payment");
-            }}
-          >
-            اشترك
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return page === "welcome"
-    ? welcomePage()
-    : page === "payment"
-    ? payPage()
-    : homePage();
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #111;
+  color: white;
+  text-align: center;
 }
 
-const styles = {
-  welcome: {
-    height: "100vh",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    background: "#111",
-    color: "white",
-    fontFamily: "Arial",
-  },
+.container {
+  padding: 20px;
+}
 
-  container: {
-    textAlign: "center",
-    padding: 20,
-    fontFamily: "Arial",
-  },
+button {
+  padding: 10px 15px;
+  margin: 10px;
+  border: none;
+  cursor: pointer;
+  background: black;
+  color: white;
+  border-radius: 8px;
+}
 
-  slider: {
-    width: "90%",
-    maxWidth: 500,
-    margin: "20px auto",
-    borderRadius: 12,
-    overflow: "hidden",
-  },
+.card {
+  background: white;
+  color: black;
+  margin: 10px auto;
+  padding: 15px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 300px;
+}
 
-  image: {
-    width: "100%",
-    height: 300,
-    objectFit: "cover",
-  },
+.slider img {
+  width: 90%;
+  max-width: 500px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+</style>
+</head>
 
-  card: {
-    border: "1px solid #ddd",
-    margin: 10,
-    padding: 15,
-    borderRadius: 10,
-  },
+<body>
 
-  btn: {
-    padding: "10px 15px",
-    marginTop: 10,
-    background: "black",
-    color: "white",
-    border: "none",
-    borderRadius: 8,
-    cursor: "pointer",
-  },
+<div id="app"></div>
 
-  input: {
-    padding: 10,
-    margin: 10,
-  },
-};
+<script>
+const images = [
+  "https://i.postimg.cc/gktS9jxh/images-8.jpg",
+  "https://i.postimg.cc/zX2tmvLZ/images-6.jpg",
+  "https://i.postimg.cc/kgXmsBk1/images-10.jpg",
+  "https://i.postimg.cc/kGn1CtN8/images-9.jpg"
+];
+
+let index = 0;
+let page = "welcome";
+
+function render() {
+  const app = document.getElementById("app");
+
+  if (page === "welcome") {
+    app.innerHTML = `
+      <div class="container">
+        <h1>LARA KHALIFA</h1>
+        <p>مرحباً بك</p>
+        <button onclick="goHome()">الدخول</button>
+      </div>
+    `;
+    return;
+  }
+
+  app.innerHTML = `
+    <div class="container">
+      <h1>العروض</h1>
+
+      <div class="slider">
