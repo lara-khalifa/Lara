@@ -23,7 +23,6 @@ button {
   background: black;
   color: white;
   border-radius: 8px;
-  cursor: pointer;
 }
 
 .card {
@@ -31,8 +30,8 @@ button {
   color: black;
   margin: 10px auto;
   padding: 15px;
-  width: 80%;
-  max-width: 300px;
+  width: 85%;
+  max-width: 320px;
   border-radius: 10px;
 }
 
@@ -59,7 +58,7 @@ const images = [
 ];
 
 let page = "welcome";
-let index = 0;
+let i = 0;
 
 function render() {
   const app = document.getElementById("app");
@@ -68,8 +67,8 @@ function render() {
     app.innerHTML = `
       <div class="container">
         <h1>LARA KHALIFA</h1>
-        <p>مرحبا بك</p>
-        <button onclick="goHome()">الدخول</button>
+        <p>مرحباً بك</p>
+        <button onclick="go()">الدخول</button>
       </div>
     `;
     return;
@@ -80,42 +79,42 @@ function render() {
       <h1>العروض</h1>
 
       <div class="slider">
-        <img id="img" src="${images[index]}">
+        <img id="img" src="${images[i]}">
       </div>
 
       <div class="card">
         <h3>6 أشهر - 150€</h3>
-        <button onclick="buy('6 أشهر')">اشترك</button>
+        <button onclick="pay('6 أشهر')">اشترك</button>
       </div>
 
       <div class="card">
         <h3>VIP - 250€</h3>
-        <button onclick="buy('VIP')">اشترك</button>
+        <button onclick="pay('VIP')">اشترك</button>
       </div>
 
       <div class="card">
         <h3>سنوي - 300€</h3>
-        <button onclick="buy('سنوي')">اشترك</button>
+        <button onclick="pay('سنوي')">اشترك</button>
       </div>
     </div>
   `;
 }
 
-function goHome() {
+function go() {
   page = "home";
   render();
 }
 
-function buy(plan) {
-  let method = prompt("baridi / binance / paypal");
-  alert("الخطة: " + plan + "\nالدفع: " + method);
+function pay(p) {
+  let m = prompt("baridi / paypal / binance");
+  alert("الخطة: " + p + "\nالدفع: " + m);
 }
 
 setInterval(() => {
   if (page === "home") {
-    index = (index + 1) % images.length;
-    const img = document.getElementById("img");
-    if (img) img.src = images[index];
+    i = (i + 1) % images.length;
+    let img = document.getElementById("img");
+    if (img) img.src = images[i];
   }
 }, 2500);
 
