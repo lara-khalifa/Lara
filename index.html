@@ -1,146 +1,158 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>LARA KHALIFA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LARA KHALIFA</title>
 
 <style>
-body {
-  margin: 0;
-  font-family: Arial;
-  color: white;
-  text-align: center;
-  background: #000;
+body{
+margin:0;
+font-family:Arial;
+background:#f5f5f5;
+direction:rtl;
 }
 
-.bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  background-size: cover;
-  background-position: center;
-  filter: brightness(0.4);
+.page{display:none;padding:20px;}
+.active{display:block;}
+
+.header{
+background:#111;
+color:white;
+padding:20px;
+text-align:center;
+font-size:22px;
 }
 
-.container {
-  padding: 20px;
+.btn{
+display:block;
+width:100%;
+padding:15px;
+margin:10px 0;
+border:none;
+border-radius:10px;
+background:#111;
+color:white;
+font-size:16px;
 }
 
-.card {
-  background: rgba(255,255,255,0.9);
-  color: black;
-  margin: 10px auto;
-  padding: 15px;
-  width: 85%;
-  max-width: 320px;
-  border-radius: 10px;
+.card{
+background:white;
+padding:15px;
+margin:10px 0;
+border-radius:10px;
+box-shadow:0 0 10px rgba(0,0,0,0.1);
 }
 
-button {
-  padding: 10px 15px;
-  margin: 10px;
-  border: none;
-  background: black;
-  color: white;
-  border-radius: 8px;
-}
-
-input {
-  padding: 10px;
-  margin: 10px;
-  width: 80%;
+input,select{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:8px;
+border:1px solid #ccc;
 }
 </style>
 </head>
 
 <body>
 
-<div class="bg" id="bg"></div>
-<div id="app"></div>
+<!-- PAGE 1 -->
+<div id="home" class="page active">
+<div class="header">LARA KHALIFA</div>
+
+<div class="card">
+<h3>مرحباً بك 👋</h3>
+<p>اضغط للانتقال إلى الاشتراك ومشاهدة المحتوى الحصري</p>
+<button class="btn" onclick="go('plans')">الإشتراك الآن</button>
+</div>
+</div>
+
+<!-- PAGE 2 -->
+<div id="plans" class="page">
+<div class="header">عروض الاشتراك</div>
+
+<div class="card">
+<h3>اشتراك 6 أشهر عادي</h3>
+<p>150€</p>
+<button class="btn" onclick="selectPlan('6 أشهر - عادي - 150€')">اشتراك</button>
+</div>
+
+<div class="card">
+<h3>اشتراك 6 أشهر VIP</h3>
+<p>250€</p>
+<button class="btn" onclick="selectPlan('6 أشهر - VIP - 250€')">اشتراك</button>
+</div>
+
+<div class="card">
+<h3>اشتراك سنوي</h3>
+<p>300€</p>
+<button class="btn" onclick="selectPlan('سنوي - 300€')">اشتراك</button>
+</div>
+</div>
+
+<!-- PAGE 3 -->
+<div id="pay" class="page">
+<div class="header">طريقة الدفع</div>
+
+<div class="card">
+<p id="selectedPlan"></p>
+
+<select id="method">
+<option>Binance</option>
+<option>BaridiMob</option>
+<option>PayPal (QR)</option>
+</select>
+
+<button class="btn" onclick="go('upload')">تأكيد الدفع</button>
+</div>
+</div>
+
+<!-- PAGE 4 -->
+<div id="upload" class="page">
+<div class="header">رفع وصل الدفع</div>
+
+<div class="card">
+<p>ارفع صورة الوصل</p>
+<input type="file">
+
+<input type="text" placeholder="رقم العملية / ID">
+
+<button class="btn" onclick="confirmPay()">إرسال</button>
+</div>
+</div>
+
+<!-- PAGE 5 -->
+<div id="done" class="page">
+<div class="header">تم الطلب</div>
+
+<div class="card">
+<h3>تم استلام طلبك ✅</h3>
+<p>سيتم مراجعة الدفع وتأكيد الاشتراك قريباً</p>
+</div>
+</div>
 
 <script>
-const images = [
-  "https://i.postimg.cc/gktS9jxh/images-8.jpg",
-  "https://i.postimg.cc/zX2tmvLZ/images-6.jpg",
-  "https://i.postimg.cc/kgXmsBk1/images-10.jpg",
-  "https://i.postimg.cc/kGn1CtN8/images-9.jpg"
-];
+let plan="";
 
-let i = 0;
-let page = "home";
-let selectedPlan = "";
-let receipt = "";
-
-function setBG() {
-  document.getElementById("bg").style.backgroundImage =
-    "url(" + images[i] + ")";
+function go(page){
+document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+document.getElementById(page).classList.add('active');
 }
 
-setInterval(() => {
-  i = (i + 1) % images.length;
-  setBG();
-}, 3000);
-
-function render() {
-  setBG();
-  const app = document.getElementById("app");
-
-  if (page === "home") {
-    app.innerHTML = `
-      <div class="container">
-        <h1>LARA KHALIFA</h1>
-
-        <div class="card">
-          <h3>ستة أشهر</h3>
-          <p>150€</p>
-          <button onclick="openPay('ستة أشهر - 150€')">اشتراك</button>
-        </div>
-
-        <div class="card">
-          <h3>VIP</h3>
-          <p>250€</p>
-          <button onclick="openPay('VIP - 250€')">اشتراك</button>
-        </div>
-
-        <div class="card">
-          <h3>سنوي</h3>
-          <p>300€</p>
-          <button onclick="openPay('سنوي - 300€')">اشتراك</button>
-        </div>
-      </div>
-    `;
-  }
-
-  if (page === "pay") {
-    app.innerHTML = `
-      <div class="container">
-        <h2>الدفع</h2>
-        <p>${selectedPlan}</p>
-
-        <button onclick="payMethod('baridi')">BaridiMob</button>
-        <button onclick="payMethod('binance')">Binance</button>
-
-        <br>
-
-        <input type="file" onchange="upload(event)" />
-
-        <br>
-
-        <button onclick="confirmPay()">تأكيد الدفع</button>
-        <button onclick="goHome()">رجوع</button>
-      </div>
-    `;
-  }
-
-  if (page === "done") {
-    app.innerHTML = `
-      <div class="container">
-        <h2>تم استلام طلبك ✅</h2>
-      </div>
-    `;
-  }
+function selectPlan(p){
+plan=p;
+document.getElementById("selectedPlan").innerText="الخطة المختارة: "+p;
+go('pay');
 }
+
+function confirmPay(){
+if(document.querySelector("input[type=file]").files.length===0){
+alert("ارفع الوصل أولاً");
+return;
+}
+go('done');
+}
+</script>
+
+</body>
+</html>
