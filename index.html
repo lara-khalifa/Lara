@@ -14,18 +14,16 @@ body {
   text-align: center;
 }
 
-.container {
-  padding: 20px;
-}
+.container { padding: 20px; }
 
 button {
   padding: 10px 15px;
   margin: 10px;
   border: none;
-  cursor: pointer;
   background: black;
   color: white;
   border-radius: 8px;
+  cursor: pointer;
 }
 
 .card {
@@ -33,17 +31,17 @@ button {
   color: black;
   margin: 10px auto;
   padding: 15px;
-  border-radius: 10px;
   width: 80%;
   max-width: 300px;
+  border-radius: 10px;
 }
 
 .slider img {
   width: 90%;
   max-width: 500px;
-  height: 300px;
+  height: 280px;
   object-fit: cover;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 </style>
 </head>
@@ -60,8 +58,8 @@ const images = [
   "https://i.postimg.cc/kGn1CtN8/images-9.jpg"
 ];
 
-let index = 0;
 let page = "welcome";
+let index = 0;
 
 function render() {
   const app = document.getElementById("app");
@@ -70,7 +68,7 @@ function render() {
     app.innerHTML = `
       <div class="container">
         <h1>LARA KHALIFA</h1>
-        <p>مرحباً بك</p>
+        <p>مرحبا بك</p>
         <button onclick="goHome()">الدخول</button>
       </div>
     `;
@@ -82,3 +80,47 @@ function render() {
       <h1>العروض</h1>
 
       <div class="slider">
+        <img id="img" src="${images[index]}">
+      </div>
+
+      <div class="card">
+        <h3>6 أشهر - 150€</h3>
+        <button onclick="buy('6 أشهر')">اشترك</button>
+      </div>
+
+      <div class="card">
+        <h3>VIP - 250€</h3>
+        <button onclick="buy('VIP')">اشترك</button>
+      </div>
+
+      <div class="card">
+        <h3>سنوي - 300€</h3>
+        <button onclick="buy('سنوي')">اشترك</button>
+      </div>
+    </div>
+  `;
+}
+
+function goHome() {
+  page = "home";
+  render();
+}
+
+function buy(plan) {
+  let method = prompt("baridi / binance / paypal");
+  alert("الخطة: " + plan + "\nالدفع: " + method);
+}
+
+setInterval(() => {
+  if (page === "home") {
+    index = (index + 1) % images.length;
+    const img = document.getElementById("img");
+    if (img) img.src = images[index];
+  }
+}, 2500);
+
+render();
+</script>
+
+</body>
+</html>
