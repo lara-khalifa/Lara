@@ -9,12 +9,36 @@
 body {
   margin: 0;
   font-family: Arial;
-  background: #111;
   color: white;
   text-align: center;
+  background: #000;
 }
 
-.container { padding: 20px; }
+.bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.4);
+}
+
+.container {
+  padding: 20px;
+}
+
+.card {
+  background: rgba(255,255,255,0.9);
+  color: black;
+  margin: 10px auto;
+  padding: 15px;
+  width: 85%;
+  max-width: 320px;
+  border-radius: 10px;
+}
 
 button {
   padding: 10px 15px;
@@ -25,28 +49,17 @@ button {
   border-radius: 8px;
 }
 
-.card {
-  background: white;
-  color: black;
-  margin: 10px auto;
-  padding: 15px;
-  width: 85%;
-  max-width: 320px;
-  border-radius: 10px;
-}
-
-.slider img {
-  width: 90%;
-  max-width: 500px;
-  height: 280px;
-  object-fit: cover;
-  border-radius: 12px;
+input {
+  padding: 10px;
+  margin: 10px;
+  width: 80%;
 }
 </style>
 </head>
 
 <body>
 
+<div class="bg" id="bg"></div>
 <div id="app"></div>
 
 <script>
@@ -57,69 +70,77 @@ const images = [
   "https://i.postimg.cc/kGn1CtN8/images-9.jpg"
 ];
 
-let page = "welcome";
 let i = 0;
+let page = "home";
+let selectedPlan = "";
+let receipt = "";
 
-function render() {
-  const app = document.getElementById("app");
-
-  if (page === "welcome") {
-    app.innerHTML = `
-      <div class="container">
-        <h1>LARA KHALIFA</h1>
-        <p>مرحباً بك</p>
-        <button onclick="go()">الدخول</button>
-      </div>
-    `;
-    return;
-  }
-
-  app.innerHTML = `
-    <div class="container">
-      <h1>العروض</h1>
-
-      <div class="slider">
-        <img id="img" src="${images[i]}">
-      </div>
-
-      <div class="card">
-        <h3>6 أشهر - 150€</h3>
-        <button onclick="pay('6 أشهر')">اشترك</button>
-      </div>
-
-      <div class="card">
-        <h3>VIP - 250€</h3>
-        <button onclick="pay('VIP')">اشترك</button>
-      </div>
-
-      <div class="card">
-        <h3>سنوي - 300€</h3>
-        <button onclick="pay('سنوي')">اشترك</button>
-      </div>
-    </div>
-  `;
-}
-
-function go() {
-  page = "home";
-  render();
-}
-
-function pay(p) {
-  let m = prompt("baridi / paypal / binance");
-  alert("الخطة: " + p + "\nالدفع: " + m);
+function setBG() {
+  document.getElementById("bg").style.backgroundImage =
+    "url(" + images[i] + ")";
 }
 
 setInterval(() => {
+  i = (i + 1) % images.length;
+  setBG();
+}, 3000);
+
+function render() {
+  setBG();
+  const app = document.getElementById("app");
+
   if (page === "home") {
-    i = (i + 1) % images.length;
-    let img = document.getElementById("img");
-    if (img) img.src = images[i];
+    app.innerHTML = `
+      <div class="container">
+        <h1>LARA KHALIFA</h1>
+
+        <div class="card">
+          <h3>ستة أشهر</h3>
+          <p>150€</p>
+          <button onclick="openPay('ستة أشهر - 150€')">اشتراك</button>
+        </div>
+
+        <div class="card">
+          <h3>VIP</h3>
+          <p>250€</p>
+          <button onclick="openPay('VIP - 250€')">اشتراك</button>
+        </div>
+
+        <div class="card">
+          <h3>سنوي</h3>
+          <p>300€</p>
+          <button onclick="openPay('سنوي - 300€')">اشتراك</button>
+        </div>
+      </div>
+    `;
   }
-}, 2500);
 
-render();
-</script>
+  if (page === "pay") {
+    app.innerHTML = `
+      <div class="container">
+        <h2>الدفع</h2>
+        <p>${selectedPlan}</p>
 
-</body>
-</html>
+        <button onclick="payMethod('baridi')">BaridiMob</button>
+        <button onclick="payMethod('binance')">Binance</button>
+
+        <br>
+
+        <input type="file" onchange="upload(event)" />
+
+        <br>
+
+        <button onclick="confirmPay()">تأكيد الدفع</button>
+        <button onclick="goHome()">رجوع</button>
+      </div>
+    `;
+  }
+
+  if (page === "done") {
+    app.innerHTML = `
+      <div class="container">
+        <h2>تم استلام طلبك ✅</h2>
+      </div>
+    `;
+  }
+}
