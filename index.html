@@ -3,85 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <title>LARA KHALIFA</title>
+
 <style>
 body {
   margin: 0;
-  font-family: Arial;
-  background: black;
+  font-family: Arial, sans-serif;
+  background: radial-gradient(circle, #111, #000);
   color: white;
   text-align: center;
 }
 
+/* HEADER */
 header {
-  padding: 60px 20px;
+  padding: 50px 20px;
 }
 
 h1 {
-  font-size: 40px;
+  font-size: 60px;
+  margin-bottom: 10px;
 }
 
+p {
+  font-size: 20px;
+  color: #ccc;
+}
+
+/* BUTTON */
 button {
-  padding: 12px 20px;
-  background: #e91e63;
+  padding: 15px 30px;
+  background: linear-gradient(45deg, #e91e63, #ff5722);
   border: none;
   color: white;
-  border-radius: 10px;
-  font-size: 18px;
+  border-radius: 12px;
+  font-size: 20px;
   cursor: pointer;
+  margin-top: 20px;
 }
 
+/* PAGES */
 .page {
   display: none;
-  padding: 20px;
+  padding: 30px;
 }
 
+/* CARD */
 .card {
-  background: #222;
-  margin: 10px;
-  padding: 15px;
-  border-radius: 10px;
+  background: rgba(255,255,255,0.05);
+  margin: 15px auto;
+  padding: 20px;
+  border-radius: 15px;
+  width: 80%;
+  max-width: 500px;
+  font-size: 22px;
 }
-</style>
-</head>
 
-<body>
-
-<header id="home">
-  <h1>LARA KHALIFA</h1>
-  <p>مرحباً بك في المنصة الحصرية</p>
-  <button onclick="showPage('plans')">الدخول إلى العروض</button>
-</header>
-
-<div id="plans" class="page">
-  <h2>خطط الاشتراك</h2>
-
-  <div class="card">6 أشهر عادي - 150€</div>
-  <div class="card">6 أشهر VIP - 250€</div>
-  <div class="card">اشتراك سنوي - 300€</div>
-
-  <button onclick="showPage('profile')">اختيار</button>
-</div>
-
-<div id="profile" class="page">
-  <h2>الملف الشخصي</h2>
-
-  <div class="card">👤 عدد المشتركين: 1200</div>
-  <div class="card">⭐ الحالة: غير مفعل</div>
-
-  <div class="card" style="filter: blur(5px);">
-    🔒 محتوى خاص (مقفل)
-  </div>
-</div>
-
-<script>
-function showPage(page) {
-  document.getElementById("home").style.display = "none";
-  document.getElementById("plans").style.display = "none";
-  document.getElementById("profile").style.display = "none";
-
-  document.getElementById(page).style.display = "block";
+/* ===== SLIDER ===== */
+.slider {
+  width: 80%;
+  max-width: 500px;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 0 25px rgba(255,255,255,0.2);
 }
-</script>
 
-</body>
-</html>
+.slides {
+  display: flex;
+  width: 400%;
+  animation: slide 12s infinite;
+}
+
+.slides img {
+  width: 100%;
+  border-radius: 20px;
+}
+
+/* ANIMATION */
+@keyframes slide {
+  0% { transform: translateX(0%); }
+  25% { transform: translateX(0%); }
+  30% { transform: translateX(-100%); }
+  55% { transform: translateX(-100%); }
+  60% { transform: translateX(-200%
